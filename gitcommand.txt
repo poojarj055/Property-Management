@@ -1,0 +1,8 @@
+generate access token: PAT
+0. git init
+1. git add .
+2. git commit -m "Intial commit"
+3. git remote add origin git@github.com:userName/Property-Management.git
+4. git remote set-url origin https://userName:PAT@github.com/userName/Property-Management.git
+5. git push --set-upstream origin master
+
