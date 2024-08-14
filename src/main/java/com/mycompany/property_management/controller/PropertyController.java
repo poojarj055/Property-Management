@@ -16,34 +16,22 @@ public class PropertyController {
     @Autowired
     private PropertyService propertyService;
 
-//    @PostMapping("/propertyDetails")
-//    public ResponseEntity<String> propertyDetails(@RequestBody PropertyDTO propertyDTO) {
-//        String result = propertyDTO.getTitle() + " " + propertyDTO.getDescription() + " "
-//                + propertyDTO.getOwnerName() + " " + propertyDTO.getOwnerEmail() + " " + propertyDTO.getPrice() + " "
-//                + propertyDTO.getAddress();
-//        return new ResponseEntity<>(result, HttpStatus.CREATED);
-//    }
-
     @PostMapping("/properties")
     public ResponseEntity<PropertyDTO> saveProperty(@RequestBody PropertyDTO propertyDTO) {
         propertyService.saveProperty(propertyDTO);
-//      System.out.println(propertyDTO+ "Property saved successfully");
-        ResponseEntity<PropertyDTO> responseEntity=new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
-        return responseEntity;
+        return new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/properties")
     public ResponseEntity<List<PropertyDTO>>  getAllProperties() {
         List<PropertyDTO> propertyList=propertyService.getAllProperties();
-        ResponseEntity<List<PropertyDTO>> responseEntity=new ResponseEntity<>(propertyList, HttpStatus.OK);
-        return responseEntity;
+       return new ResponseEntity<>(propertyList, HttpStatus.OK);
     }
 
     @PutMapping("/properties/{propertyId}")
     public ResponseEntity<PropertyDTO> updateProperty(@RequestBody PropertyDTO propertyDTO, @PathVariable Long propertyId) {
         PropertyDTO updatedProperty=propertyService.updateProperty(propertyDTO, propertyId);
-        ResponseEntity<PropertyDTO> responseEntity=new ResponseEntity<>(updatedProperty, HttpStatus.OK);
-        return responseEntity;
+       return new ResponseEntity<>(updatedProperty, HttpStatus.OK);
     }
 
     @PatchMapping("/properties/update-price/{propertyId}")
@@ -54,7 +42,6 @@ public class PropertyController {
     @DeleteMapping("/properties/{propertyId}")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId) {
          propertyService.deleteProperty(propertyId);
-         ResponseEntity<Void> responseEntity=new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-         return responseEntity;
+         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

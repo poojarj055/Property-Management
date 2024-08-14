@@ -1,7 +1,6 @@
 package com.mycompany.property_management.dto;
 
 public class PropertyDTO {
-    private Long id;
     private String title;
     private String description;
     private Double price;

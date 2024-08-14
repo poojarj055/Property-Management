@@ -17,8 +17,7 @@ public class PropertyEntity {
     private Double price;
     private String address;
 
-    public PropertyEntity() {
-    }
+
     public Long getId() {
         return id;
     }

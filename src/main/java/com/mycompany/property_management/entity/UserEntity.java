@@ -10,11 +10,10 @@ public class UserEntity {
     private String ownerName;
     @Column(name = "EMAIL", nullable=false)
     private String ownerEmail;
+    @Column(name = "PASSWORD", nullable=false)
     private String password;
     private String phone;
 
-    public UserEntity() {
-    }
     public Long getId() {
         return id;
     }

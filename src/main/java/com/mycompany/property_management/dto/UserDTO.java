@@ -1,6 +1,5 @@
 package com.mycompany.property_management.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -13,8 +12,6 @@ public class UserDTO  {
     private String password;
     private String phone;
 
-    public UserDTO() {
-    }
 
     public Long getId() {
         return id;
