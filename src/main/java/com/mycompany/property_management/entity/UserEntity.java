@@ -8,9 +8,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String ownerName;
-    @Column(name = "EMAIL", nullable=false)
+   @Column(name = "EMAIL", nullable=false)
     private String ownerEmail;
-    @Column(name = "PASSWORD", nullable=false)
+   @Column(name = "PASSWORD", nullable=false)
     private String password;
     private String phone;
 
