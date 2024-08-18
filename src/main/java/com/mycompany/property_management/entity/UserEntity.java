@@ -1,29 +1,27 @@
 package com.mycompany.property_management.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 
 @Entity
+@Table(name = "USER_ENTITY")
+
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String ownerName;
-   @Column(name = "EMAIL", nullable=false)
+    @Column(name = "OWNER_EMAIL", nullable = false)
     private String ownerEmail;
-   @Column(name = "PASSWORD", nullable=false)
-    private String password;
     private String phone;
+    private String password;
 
     public Long getId() {
         return id;
     }
 
-    public String getOwnerEmail() {
-        return ownerEmail;
-    }
-
-    public void setOwnerEmail(String ownerEmail) {
-        this.ownerEmail = ownerEmail;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getOwnerName() {
@@ -34,16 +32,12 @@ public class UserEntity {
         this.ownerName = ownerName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getOwnerEmail() {
+        return ownerEmail;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
     }
 
     public String getPhone() {
@@ -52,5 +46,13 @@ public class UserEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

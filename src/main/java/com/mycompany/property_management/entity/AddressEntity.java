@@ -1,6 +1,6 @@
 package com.mycompany.property_management.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Entity
@@ -15,6 +15,17 @@ public class AddressEntity {
     private String city;
     private String postalCode;
     private String country;
+//    private String userId;
+//
+//
+//    public String getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(String userId) {
+//        this.userId = userId;
+//    }
+
 
     public String getHouseNo() {
         return houseNo;

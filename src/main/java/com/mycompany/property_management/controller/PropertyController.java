@@ -35,8 +35,8 @@ public class PropertyController {
     }
 
     @PatchMapping("/properties/update-price/{propertyId}")
-    public void updatePrice(@RequestBody PropertyDTO propertyDTO, @PathVariable Long propertyId) {
-        propertyService.updatePrice(propertyDTO, propertyId);
+    public void updatePropertyPrice(@RequestBody PropertyDTO propertyDTO, @PathVariable Long propertyId) {
+        propertyService.updatePropertyPrice(propertyDTO, propertyId);
     }
 
     @DeleteMapping("/properties/{propertyId}")

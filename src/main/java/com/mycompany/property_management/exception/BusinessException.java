@@ -10,6 +10,9 @@ public class BusinessException extends RuntimeException {
         this.errorModel = errorModel;
     }
 
+    public BusinessException(String propertyIdNotFound, String s) {
+    }
+
     public List<ErrorModel> getErrorModel() {
         return errorModel;
     }

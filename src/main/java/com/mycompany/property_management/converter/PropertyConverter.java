@@ -1,26 +1,47 @@
 package com.mycompany.property_management.converter;
 
-import com.mycompany.property_management.entity.PropertyEntity;
-import org.springframework.stereotype.Component;
 import com.mycompany.property_management.dto.PropertyDTO;
+import com.mycompany.property_management.entity.PropertyEntity;
+import com.mycompany.property_management.entity.UserEntity;
+import com.mycompany.property_management.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PropertyConverter {
+
+    @Autowired
+    private UserRepository userRepository;
+
     public PropertyEntity convertDTOToEntity(PropertyDTO propertyDTO) {
-        PropertyEntity propertyEntity = new PropertyEntity();
-        propertyEntity.setTitle(propertyDTO.getTitle());
-        propertyEntity.setDescription(propertyDTO.getDescription());
-        propertyEntity.setPrice(propertyDTO.getPrice());
-        propertyEntity.setAddress(propertyDTO.getAddress());
-        return propertyEntity;
+        PropertyEntity pe = new PropertyEntity();
+        pe.setTitle(propertyDTO.getTitle());
+        pe.setAddress(propertyDTO.getAddress());
+        pe.setPrice(propertyDTO.getPrice());
+        pe.setDescription(propertyDTO.getDescription());
+
+        // Fetch the UserEntity based on userId from DTO
+        if (propertyDTO.getUserId() != null) {
+            UserEntity userEntity = userRepository.findById(propertyDTO.getUserId()).orElse(null);
+            pe.setUserEntity(userEntity);
+        }
+
+        return pe;
     }
 
     public PropertyDTO convertEntityToDTO(PropertyEntity propertyEntity) {
         PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setId(propertyEntity.getId());
         propertyDTO.setTitle(propertyEntity.getTitle());
-        propertyDTO.setDescription(propertyEntity.getDescription());
-        propertyDTO.setPrice(propertyEntity.getPrice());
         propertyDTO.setAddress(propertyEntity.getAddress());
+        propertyDTO.setPrice(propertyEntity.getPrice());
+        propertyDTO.setDescription(propertyEntity.getDescription());
+
+        // Set the userId as the ID of the associated UserEntity
+        if (propertyEntity.getUserEntity() != null) {
+            propertyDTO.setUserId(propertyEntity.getUserEntity().getId());
+        }
+
         return propertyDTO;
     }
 }

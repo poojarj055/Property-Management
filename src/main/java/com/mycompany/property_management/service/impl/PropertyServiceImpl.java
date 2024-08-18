@@ -2,77 +2,130 @@ package com.mycompany.property_management.service.impl;
 
 import com.mycompany.property_management.converter.PropertyConverter;
 import com.mycompany.property_management.dto.PropertyDTO;
+import com.mycompany.property_management.entity.PropertyEntity;
+import com.mycompany.property_management.entity.UserEntity;
+import com.mycompany.property_management.exception.BusinessException;
+import com.mycompany.property_management.exception.ErrorModel;
 import com.mycompany.property_management.repository.PropertyRepository;
-import com.mycompany.property_management.service.PropertyService;
+import com.mycompany.property_management.repository.UserRepository;
+import com.mycompany.property_management.service.PropertyService;;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.mycompany.property_management.entity.PropertyEntity;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-
 public class PropertyServiceImpl implements PropertyService {
 
-    @Value("{pms.dummy:}")
+    @Value("${pms.dummy:}")
     private String dummy;
 
-    @Value("{spring.datasource.url:}")
+    @Value("${spring.datasource.url:}")
     private String dbUrl;
 
     @Autowired
     private PropertyRepository propertyRepository;
-
     @Autowired
     private PropertyConverter propertyConverter;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public PropertyDTO saveProperty(PropertyDTO propertyDTO) {
 
-        PropertyEntity propertyEntity = propertyConverter.convertDTOToEntity(propertyDTO);
-        propertyEntity=propertyRepository.save(propertyEntity);
+        Optional<UserEntity> optUe = userRepository.findById(propertyDTO.getUserId());
+        if(optUe.isPresent()) {
+            PropertyEntity pe = propertyConverter.convertDTOToEntity(propertyDTO);
+            pe.setUserEntity(optUe.get());
+            pe = propertyRepository.save(pe);
 
-        propertyDTO=propertyConverter.convertEntityToDTO(propertyEntity);
+            propertyDTO = propertyConverter.convertEntityToDTO(pe);
+        }else{
+            List<ErrorModel> errorModelList = new ArrayList<>();
+            ErrorModel errorModel = new ErrorModel();
+            errorModel.setCode("USER_ID_NOT_EXIST");
+            errorModel.setMessage("User does not exist");
+            errorModelList.add(errorModel);
+
+            throw new BusinessException(errorModelList);
+        }
         return propertyDTO;
     }
 
     @Override
     public List<PropertyDTO> getAllProperties() {
-        List<PropertyEntity> listOfProps = (List<PropertyEntity>) propertyRepository.findAll();
-        List<PropertyDTO> propertyDTOList = new ArrayList<>();
-        for (PropertyEntity pe : listOfProps) {
-            PropertyDTO propertyDTO = propertyConverter.convertEntityToDTO(pe);
-            propertyDTOList.add(propertyDTO);
+
+        System.out.println("Inside service "+dummy);
+        System.out.println("Inside service "+dbUrl);
+        List<PropertyEntity> listOfProps = (List<PropertyEntity>)propertyRepository.findAll();
+        List<PropertyDTO> propList = new ArrayList<>();
+
+        for(PropertyEntity pe : listOfProps){
+            PropertyDTO dto = propertyConverter.convertEntityToDTO(pe);
+            propList.add(dto);
         }
-        return propertyDTOList;
+        return propList;
+    }
+
+    @Override
+    public List<PropertyDTO> getAllPropertiesForUser(UserEntity userId) {
+        List<PropertyEntity> listOfProps = (List<PropertyEntity>)propertyRepository.findAllByUserEntityId(userId);
+        List<PropertyDTO> propList = new ArrayList<>();
+
+        for(PropertyEntity pe : listOfProps){
+            PropertyDTO dto = propertyConverter.convertEntityToDTO(pe);
+            propList.add(dto);
+        }
+        return propList;
     }
 
     @Override
     public PropertyDTO updateProperty(PropertyDTO propertyDTO, Long propertyId) {
-        Optional<PropertyEntity> optEn = propertyRepository.findById(propertyId);
-        if (optEn.isPresent()) {
-            PropertyEntity propertyEntity = optEn.get();
-            propertyEntity.setTitle(propertyDTO.getTitle());
-            propertyEntity.setDescription(propertyDTO.getDescription());
-            propertyEntity.setPrice(propertyDTO.getPrice());
-            propertyEntity.setAddress(propertyDTO.getAddress());
-            propertyEntity = propertyRepository.save(propertyEntity);
-            propertyDTO = propertyConverter.convertEntityToDTO(propertyEntity);
+
+        Optional<PropertyEntity> optEn =  propertyRepository.findById(propertyId);
+        PropertyDTO dto = null;
+        if(optEn.isPresent()){
+
+            PropertyEntity pe = optEn.get();//data from database
+            pe.setTitle(propertyDTO.getTitle());
+            pe.setAddress(propertyDTO.getAddress());
+            pe.setPrice(propertyDTO.getPrice());
+            pe.setDescription(propertyDTO.getDescription());
+            dto = propertyConverter.convertEntityToDTO(pe);
+            propertyRepository.save(pe);
         }
-        return propertyDTO;
+        return dto;
     }
 
     @Override
-    public void updatePrice(PropertyDTO propertyDTO, Long propertyId) {
-        Optional<PropertyEntity> optEn = propertyRepository.findById(propertyId);
-        if (optEn.isPresent()) {
-            PropertyEntity propertyEntity = optEn.get();
-            propertyEntity.setPrice(propertyDTO.getPrice());
-            propertyEntity = propertyRepository.save(propertyEntity);
+    public PropertyDTO updatePropertyDescription(PropertyDTO propertyDTO, Long propertyId) {
+        Optional<PropertyEntity> optEn =  propertyRepository.findById(propertyId);
+        PropertyDTO dto = null;
+        if(optEn.isPresent()){
+            PropertyEntity pe = optEn.get();//data from database
+            pe.setDescription(propertyDTO.getDescription());
+            dto = propertyConverter.convertEntityToDTO(pe);
+            propertyRepository.save(pe);
         }
+        return dto;
     }
+
+    @Override
+    public PropertyDTO updatePropertyPrice(PropertyDTO propertyDTO, Long propertyId) {
+        Optional<PropertyEntity> optEn =  propertyRepository.findById(propertyId);
+        PropertyDTO dto = null;
+        if(optEn.isPresent()){
+            PropertyEntity pe = optEn.get();//data from database
+            pe.setPrice(propertyDTO.getPrice());
+            dto = propertyConverter.convertEntityToDTO(pe);
+            propertyRepository.save(pe);
+        }
+        return dto;
+    }
+
     @Override
     public void deleteProperty(Long propertyId) {
         propertyRepository.deleteById(propertyId);
